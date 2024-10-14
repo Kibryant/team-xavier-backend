@@ -1,11 +1,10 @@
 import { describe, it, expect } from 'bun:test'
-import { Plan, Role, type User } from './user'
+import { Plan, type Client } from './client'
 
-describe('User', () => {
-  it('should be a entity user', () => {
-    const user: User = {
+describe('Client', () => {
+  it('should be a entity client', () => {
+    const client: Client = {
       id: '1',
-      role: Role.USER,
       plan: Plan.BASIC,
       name: 'John Doe',
       email: 'johndoe@gmail.com',
@@ -15,9 +14,8 @@ describe('User', () => {
       photos: [],
     }
 
-    expect(user).toEqual({
+    expect(client).toEqual({
       id: '1',
-      role: Role.USER,
       plan: Plan.BASIC,
       name: 'John Doe',
       email: 'johndoe@gmail.com',
