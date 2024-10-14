@@ -1,0 +1,12 @@
+name: team_xavier_database_development_database
+
+services:
+  postgres:
+    container_name: team-xavier-postgres-development-container
+    image: bitnami/postgresql:13.16.0
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRESQL_USERNAME=team_xavier_database_development_database
+      - POSTGRESQL_PASSWORD=team_xavier_database_development_database
+      - POSTGRESQL_DATABASE=team_xavier_database_development_database
