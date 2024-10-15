@@ -2,9 +2,9 @@
   "name": "team-xavier-backend",
   "version": "1.0.50",
   "scripts": {
-    "test": "bun test --watch",
     "dev": "bun run --watch src/http/server.ts",
-    "seed": "bun run src/database/seed.ts"
+    "seed": "bun run src/database/seed.ts",
+    "test": "bun test --watch"
   },
   "dependencies": {
     "@fastify/cors": "^10.0.1",

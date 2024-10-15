@@ -1,10 +1,16 @@
 export class Result<T, E = string> {
   public isSuccess: boolean
   public isFailure: boolean
+  public statusCode: number
   public error?: E
   private _value?: T
 
-  private constructor(isSuccess: boolean, error?: E, value?: T) {
+  private constructor(
+    isSuccess: boolean,
+    statusCode: number,
+    error?: E,
+    value?: T
+  ) {
     if (isSuccess && error) {
       throw new Error(
         'InvalidOperation: A result cannot be successful and contain an error'
@@ -20,6 +26,7 @@ export class Result<T, E = string> {
     this.isFailure = !isSuccess
     this.error = error
     this._value = value
+    this.statusCode = statusCode
     Object.freeze(this)
   }
 
@@ -31,12 +38,15 @@ export class Result<T, E = string> {
     return this._value as T
   }
 
-  public static ok<U>(value?: U): Result<U> {
-    return new Result<U>(true, undefined, value)
+  public static ok<U>(statusCode: number, value?: U): Result<U> {
+    return new Result<U>(true, statusCode, undefined, value)
   }
 
-  public static fail<U, E = string>(error: E): Result<U, E> {
-    return new Result<U, E>(false, error)
+  public static fail<U, E = string>(
+    error: E,
+    statusCode: number
+  ): Result<U, E> {
+    return new Result<U, E>(false, statusCode, error, undefined)
   }
 
   public getErrorValue(): E {
@@ -47,20 +57,5 @@ export class Result<T, E = string> {
     }
 
     return this.error
-  }
-
-  public map<U>(fn: (value: T) => U): Result<U, E> {
-    if (this.isSuccess) {
-      return new Result<U, E>(true, undefined, fn(this._value as T))
-    }
-
-    return Result.fail(this.error as E)
-  }
-
-  public match<R>(onSuccess: (value: T) => R, onFailure: (error: E) => R): R {
-    if (this.isSuccess) {
-      return onSuccess(this._value as T)
-    }
-    return onFailure(this.error as E)
   }
 }

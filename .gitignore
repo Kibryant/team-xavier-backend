@@ -44,7 +44,4 @@ package-lock.json
 
 
 # vscode
-.vscode/*
-
-# drizzle
-/drizzle
+.vscode/
