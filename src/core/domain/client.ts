@@ -1,21 +1,31 @@
+import { Entity } from '../shared/entity'
 import type { CreatePhotoDto, Photo } from './photo'
 
-export interface Client {
-  id: string
-  plan: Plan
-  name: string
-  email: string
-  password: string
-  createdAt: Date
-  updatedAt: Date
-  photos: Photo[]
+export class Client extends Entity {
+  public name: string
+  public email: string
+  public password: string
+  public plan: Plan
+  public photos: Photo[]
+
+  constructor(
+    { name, email, password, plan, photos }: CreateClientDto,
+    id?: string
+  ) {
+    super(id)
+    this.name = name
+    this.email = email
+    this.password = password
+    this.plan = plan
+    this.photos = photos ?? []
+  }
 }
 
 export interface CreateClientDto {
   name: string
   email: string
   password: string
-  photo?: CreatePhotoDto
+  photos?: Photo[]
   plan: Plan
 }
 

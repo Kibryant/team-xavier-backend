@@ -1,16 +1,13 @@
-import type { CreatePhotoDto, Photo } from '../domain/photo'
+import { type CreatePhotoDto, Photo } from '../domain/photo'
 import type { PhotoRepository } from '../repository/photo-repository'
 
 export class PhotoRepositoryMock implements PhotoRepository {
   private photos: Photo[] = []
 
   async addPhoto(photoToCreate: CreatePhotoDto): Promise<Photo> {
-    const photo: Photo = {
-      id: this.generateId(),
+    const photo = new Photo({
       ...photoToCreate,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }
+    })
 
     this.photos.push(photo)
 
@@ -18,7 +15,7 @@ export class PhotoRepositoryMock implements PhotoRepository {
   }
 
   async deletePhoto(photoId: string): Promise<void> {
-    const photoIndex = this.photos.findIndex(photo => photo.id === photoId)
+    const photoIndex = this.photos.findIndex(photo => photo.getId() === photoId)
 
     if (photoIndex === -1) {
       throw new Error('Photo not found')
@@ -27,7 +24,7 @@ export class PhotoRepositoryMock implements PhotoRepository {
     this.photos.splice(photoIndex, 1)
   }
 
-  private generateId(): string {
-    return Math.random().toString(36).split('.')[1]
+  async getPhotosByClientId(clientId: string): Promise<Photo[]> {
+    return this.photos.filter(photo => photo.clientId === clientId)
   }
 }

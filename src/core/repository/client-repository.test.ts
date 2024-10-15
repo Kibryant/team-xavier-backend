@@ -14,7 +14,7 @@ describe('ClientRepository', () => {
     clientRepository = new ClientRepositoryMock()
   })
 
-  it('should create a new client without a photo', async () => {
+  it('should create a new client with plan basic', async () => {
     const createClientDto: CreateClientDto = {
       name: 'John Doe',
       email: 'john@example.com',
@@ -31,6 +31,50 @@ describe('ClientRepository', () => {
     expect(newClient.photos.length).toBe(0)
   })
 
+  it('should create a new client with plan premium', async () => {
+    const createClientDto: CreateClientDto = {
+      name: 'John Doe',
+      email: 'johndoe@gmail.com',
+      password: 'securepassword',
+      plan: Plan.PRO,
+    }
+
+    const newClient = await clientRepository.createClient(createClientDto)
+
+    expect(newClient).toHaveProperty('id')
+    expect(newClient.name).toBe('John Doe')
+    expect(newClient.email).toBe('johndoe@gmail.com')
+    expect(newClient.plan).toBe(Plan.PRO)
+    expect(newClient.photos.length).toBe(0)
+  })
+
+  it('should update a client', async () => {
+    const createClientDto: CreateClientDto = {
+      name: 'John Doe',
+      email: 'johndoe@gmail.com',
+      password: 'securepassword',
+      plan: Plan.BASIC,
+    }
+
+    const newClient = await clientRepository.createClient(createClientDto)
+
+    const updateClientDto: UpdateClientDto = {
+      email: 'janedoe@gmail.com',
+      name: 'Jane Doe',
+    }
+
+    const updatedClient = await clientRepository.updateClient(
+      newClient.getId(),
+      updateClientDto
+    )
+
+    expect(updatedClient).toHaveProperty('id')
+    expect(updatedClient.name).toBe('Jane Doe')
+    expect(updatedClient.email).toBe('janedoe@gmail.com')
+    expect(updatedClient.plan).toBe(Plan.BASIC)
+    expect(updatedClient.photos.length).toBe(0)
+  })
+
   it('should get all clients', async () => {
     const createClientDto: CreateClientDto = {
       name: 'John Doe',
@@ -41,10 +85,10 @@ describe('ClientRepository', () => {
 
     await clientRepository.createClient(createClientDto)
 
-    const result = await clientRepository.getClients()
+    const clients = await clientRepository.getClients()
 
-    expect(result.clients.length).toBe(1)
-    expect(result.clients[0].name).toBe('John Doe')
+    expect(clients.length).toBe(1)
+    expect(clients[0].name).toBe('John Doe')
   })
 
   it('should get a client by ID', async () => {
@@ -57,10 +101,11 @@ describe('ClientRepository', () => {
 
     const newClient = await clientRepository.createClient(createClientDto)
 
-    const foundClient = await clientRepository.getClientById(newClient.id)
+    const foundClient = await clientRepository.getClientById(newClient.getId())
 
     expect(foundClient).not.toBeNull()
     expect(foundClient?.name).toBe('John Doe')
+    expect(foundClient?.email).toBe('john@example.com')
   })
 
   it('should delete a client', async () => {
@@ -73,9 +118,15 @@ describe('ClientRepository', () => {
 
     const newClient = await clientRepository.createClient(createClientDto)
 
-    await clientRepository.deleteClient(newClient.id)
+    await clientRepository.deleteClient(newClient.getId())
 
-    const foundClient = await clientRepository.getClientById(newClient.id)
+    const foundClient = await clientRepository.getClientById(newClient.getId())
+
+    expect(foundClient).toBeNull()
+  })
+
+  it('should return null when getting a non-existent client', async () => {
+    const foundClient = await clientRepository.getClientById('non-existent-id')
 
     expect(foundClient).toBeNull()
   })

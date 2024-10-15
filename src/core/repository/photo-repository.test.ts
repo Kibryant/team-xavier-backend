@@ -4,51 +4,57 @@ import type { PhotoRepository } from './photo-repository'
 import { PhotoRepositoryMock } from '../mocks/photo-repository-mock'
 
 describe('PhotoRepositoryMock', () => {
-  let photoRepository: PhotoRepository
+  let photoRepository: PhotoRepositoryMock
+
+  const mockPhotoData: CreatePhotoDto = {
+    url: 'http://example.com/photo.jpg',
+    clientId: 'client-123',
+  }
 
   beforeEach(() => {
     photoRepository = new PhotoRepositoryMock()
   })
 
   it('should add a new photo', async () => {
-    const userId = 'user123'
+    const photo = await photoRepository.addPhoto(mockPhotoData)
 
-    const createPhotoDto: CreatePhotoDto = {
-      url: 'https://example.com/photo1.jpg',
-      userId,
-    }
-
-    const newPhoto = await photoRepository.addPhoto(createPhotoDto)
-
-    expect(newPhoto).toHaveProperty('id')
-    expect(newPhoto.url).toBe(createPhotoDto.url)
-    expect(newPhoto.createdAt).toBeInstanceOf(Date)
-    expect(newPhoto.updatedAt).toBeInstanceOf(Date)
+    expect(photo.url).toBe(mockPhotoData.url)
+    expect(photo.clientId).toBe(mockPhotoData.clientId)
+    expect(photo.createdAt).toBeInstanceOf(Date)
   })
 
-  it('should delete a photo by id', async () => {
-    const userId = 'user456'
+  it('should delete an existing photo', async () => {
+    const photo = await photoRepository.addPhoto(mockPhotoData)
 
-    const createPhotoDto: CreatePhotoDto = {
-      url: 'https://example.com/photo2.jpg',
-      userId,
-    }
+    await photoRepository.deletePhoto(photo.getId())
 
-    const photo = await photoRepository.addPhoto(createPhotoDto)
-
-    await photoRepository.deletePhoto(photo.id)
-
-    // @ts-ignore
-    // biome-ignore lint/complexity/useLiteralKeys: <explanation>
-    const photos = photoRepository['photos'] // Access the private array for test purposes
-    const foundPhoto = photos.find((p: { id: string }) => p.id === photo.id)
-
-    expect(foundPhoto).toBeUndefined()
+    const remainingPhotos = await photoRepository.getPhotosByClientId(
+      photo.clientId
+    )
+    expect(remainingPhotos.length).toBe(0)
   })
 
-  it('should not throw an error if deleting a non-existent photo', async () => {
+  it('should throw an error if trying to delete a non-existent photo', async () => {
     await expect(
-      photoRepository.deletePhoto('non-existent-photo-id')
+      photoRepository.deletePhoto('non-existent-id')
     ).rejects.toThrow('Photo not found')
+  })
+
+  it('should return all photos for a client', async () => {
+    await photoRepository.addPhoto(mockPhotoData)
+    await photoRepository.addPhoto({
+      url: 'http://example.com/photo2.jpg',
+      clientId: 'client-123',
+    })
+    await photoRepository.addPhoto({
+      url: 'http://example.com/photo3.jpg',
+      clientId: 'client-456',
+    })
+
+    const clientPhotos = await photoRepository.getPhotosByClientId('client-123')
+
+    expect(clientPhotos.length).toBe(2)
+    expect(clientPhotos[0].url).toBe('http://example.com/photo.jpg')
+    expect(clientPhotos[1].url).toBe('http://example.com/photo2.jpg')
   })
 })
