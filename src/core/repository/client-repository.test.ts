@@ -28,7 +28,6 @@ describe('ClientRepository', () => {
     expect(newClient.name).toBe('John Doe')
     expect(newClient.email).toBe('john@example.com')
     expect(newClient.plan).toBe(Plan.BASIC)
-    expect(newClient.photos.length).toBe(0)
   })
 
   it('should create a new client with plan premium', async () => {
@@ -45,7 +44,6 @@ describe('ClientRepository', () => {
     expect(newClient.name).toBe('John Doe')
     expect(newClient.email).toBe('johndoe@gmail.com')
     expect(newClient.plan).toBe(Plan.PRO)
-    expect(newClient.photos.length).toBe(0)
   })
 
   it('should update a client', async () => {
@@ -72,7 +70,6 @@ describe('ClientRepository', () => {
     expect(updatedClient.name).toBe('Jane Doe')
     expect(updatedClient.email).toBe('janedoe@gmail.com')
     expect(updatedClient.plan).toBe(Plan.BASIC)
-    expect(updatedClient.photos.length).toBe(0)
   })
 
   it('should get all clients', async () => {

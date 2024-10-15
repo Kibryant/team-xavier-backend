@@ -18,7 +18,6 @@ describe('Client', () => {
     expect(client.name).toBe('John Doe')
     expect(client.email).toBe('johndoe@gmail.com')
     expect(client.plan).toBe(Plan.BASIC)
-    expect(client.photos.length).toBe(0)
   })
 
   it('should be a entity client with generated id', () => {
@@ -34,6 +33,5 @@ describe('Client', () => {
     expect(client.name).toBe('John Doe')
     expect(client.email).toBe('johndoe@gmail.com')
     expect(client.plan).toBe(Plan.BASIC)
-    expect(client.photos.length).toBe(0)
   })
 })

@@ -22,6 +22,16 @@ export class ClientRepositoryMock implements ClientRepository {
     return client
   }
 
+  async getClientByEmail(email: string): Promise<Client | null> {
+    const client = this.clients.find(client => client.email === email)
+
+    if (!client) {
+      return null
+    }
+
+    return client
+  }
+
   async createClient(createClientDto: CreateClientDto): Promise<Client> {
     const client = new Client({
       ...createClientDto,
