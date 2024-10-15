@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@prisma/client'
 import {
   type CreateClientDto,
   type UpdateClientDto,
@@ -6,10 +6,13 @@ import {
   Client,
 } from '../../core/domain/client'
 import type { ClientRepository } from '../../core/repository/client-repository'
-import { ClientMapper } from '../../core/mapper/client-mapper'
 
 export class ClientRepositoryPrisma implements ClientRepository {
-  private readonly prisma: PrismaClient = new PrismaClient()
+  private prisma: PrismaClient
+
+  constructor(prisma: PrismaClient) {
+    this.prisma = prisma
+  }
 
   async createClient({
     name,
