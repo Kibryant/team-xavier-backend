@@ -6,7 +6,7 @@ import { clientService } from '../service'
 
 export const getClients: FastifyPluginAsyncZod = async app => {
   app.get(
-    '/clients',
+    '/get-clients',
     {
       schema: {
         response: {

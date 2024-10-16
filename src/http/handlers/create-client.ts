@@ -3,7 +3,7 @@ import { HTTP_STATUS_CODE } from '../types/http-status-code'
 import { createClientSchema } from '../schemas/create-client-schema'
 import { responseOkSchema } from '../schemas/response-ok-schema'
 import { responseErrorSchema } from '../schemas/response-error-schema'
-import { clientService } from '../service'
+import { clientService, hashService } from '../service'
 
 export const createClient: FastifyPluginAsyncZod = async app => {
   app.post(
@@ -22,10 +22,12 @@ export const createClient: FastifyPluginAsyncZod = async app => {
     async (request, reply) => {
       const { name, email, password, plan } = request.body
 
+      const hashedPassword = await hashService.hash(password)
+
       const result = await clientService.createClient({
         name,
         email,
-        password,
+        password: hashedPassword,
         plan,
       })
 

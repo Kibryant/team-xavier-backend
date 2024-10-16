@@ -1,14 +1,18 @@
 import type { FastifyInstance } from 'fastify'
-import { ClientService } from '../../core/services/client-service'
-import { ClientRepositoryPrisma } from '../../database/repositories/client-repository-prisma'
-import { HTTP_STATUS_CODE } from '../types/http-status-code'
 import { getClients } from '../handlers/get-clients'
 import { createClient } from '../handlers/create-client'
-
-const clientRepository = new ClientRepositoryPrisma()
-const clientService = new ClientService(clientRepository)
+import { deleteClient } from '../handlers/delete-client'
+import { updateClient } from '../handlers/update-client'
+import { changeClientPlan } from '../handlers/change-client-plan'
+import { clientSignIn } from '../handlers/client-sign-in'
+import { getClientData } from '../handlers/get-client-data'
 
 export async function registerRoutes(app: FastifyInstance) {
-  app.register(getClients)
-  app.register(createClient)
+  app.register(getClients, { prefix: '/owner' })
+  app.register(createClient, { prefix: '/owner' })
+  app.register(deleteClient, { prefix: '/owner' })
+  app.register(updateClient, { prefix: '/owner' })
+  app.register(changeClientPlan)
+  app.register(clientSignIn)
+  app.register(getClientData)
 }

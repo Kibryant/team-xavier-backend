@@ -68,6 +68,27 @@ describe('ClientRepository', () => {
     expect(updatedClient.plan).toBe('BASIC')
   })
 
+  it('should change a client plan', async () => {
+    const createClientDto: CreateClientDto = {
+      name: 'John Doe',
+      email: 'johndoe@gmail.com',
+      password: 'securepassword',
+      plan: 'BASIC',
+    }
+
+    const newClient = await clientRepository.createClient(createClientDto)
+
+    const updatedClient = await clientRepository.changeClientPlan(
+      newClient.id,
+      'PRO'
+    )
+
+    expect(updatedClient).toHaveProperty('id')
+    expect(updatedClient.name).toBe('John Doe')
+    expect(updatedClient.email).toBe('johndoe@gmail.com')
+    expect(updatedClient.plan).toBe('PRO')
+  })
+
   it('should get all clients', async () => {
     const createClientDto: CreateClientDto = {
       name: 'John Doe',

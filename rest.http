@@ -1,9 +1,54 @@
+GET http://localhost:3000/owner/get-clients
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtMmJ4bXhlMzAwMDB4MjcwNmZtMWU4cGYiLCJlbWFpbCI6ImFydGh1cnVndXN0YXZvbkBnbWFpbC5jb20iLCJuYW1lIjoiQXJ0aHVyIEd1c3Rhdm8iLCJpYXQiOjE3MjkwODcyODR9.-yVz8-YfjuuXB5vQ4qJnSPg59GqStt0gWN2cPe5xKvU
+
+
+###
+
 POST http://localhost:3000/create-client
 Content-Type: application/json
 
 {
-  "name": "John Doe",
-  "email": "johndoe@gmail.com",
-  "password": "123456",
-  "plan": "BASIC"
+  "name": "Arthur Gustavo",
+  "email": "arthurugustavon@gmail.com",
+  "password": "123456789",
+  "plan": "PRO"
+}
+
+
+###
+
+POST http://localhost:3000/client-sign-in
+Content-Type: application/json
+
+{
+  "email": "arthurugustavon@gmail.com",
+  "password": "123456789"
+}
+
+###
+
+GET http://localhost:3000/get-client-data
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtMmJ4bXhlMzAwMDB4MjcwNmZtMWU4cGYiLCJlbWFpbCI6ImFydGh1cnVndXN0YXZvbkBnbWFpbC5jb20iLCJuYW1lIjoiQXJ0aHVyIEd1c3Rhdm8iLCJpYXQiOjE3MjkwODcyODR9.-yVz8-YfjuuXB5vQ4qJnSPg59GqStt0gWN2cPe5xKvU
+
+###
+
+DELETE http://localhost:3000/delete-client/cm2akq7l30000t1v3z11m8bzi
+
+
+###
+
+PUT http://localhost:3000/update-client/cm2bvn1yb0001buu19llo0gyl
+Content-Type: application/json
+
+{
+  "name": "Arthur Gustavo"
+}
+
+###
+
+PUT http://localhost:3000/update-client/cm2bvn1yb0001buu19llo0gyl
+Content-Type: application/json
+
+{
+  "email": "arthurupdatedemail@gmail.com"
 }

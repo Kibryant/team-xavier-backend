@@ -44,11 +44,9 @@ export interface CreateClientDto {
 export interface UpdateClientDto {
   name?: string
   email?: string
-  password?: string
-  plan?: Plan
 }
 
-type Plan = (typeof Plan)[keyof typeof Plan]
+export type Plan = (typeof Plan)[keyof typeof Plan]
 
 const Plan = {
   BASIC: 'BASIC',

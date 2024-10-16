@@ -1,5 +1,6 @@
 import {
   Client,
+  type Plan,
   type ClientPersistance,
   type CreateClientDto,
   type UpdateClientDto,
@@ -68,6 +69,23 @@ export class ClientRepositoryMock implements ClientRepository {
     const updatedClient: Client = new Client({
       ...this.clients[clientIndex],
       ...updateClientDto,
+    })
+
+    this.clients[clientIndex] = updatedClient
+
+    return ClientMapper.toPersistence(updatedClient)
+  }
+
+  async changeClientPlan(id: string, plan: Plan): Promise<ClientPersistance> {
+    const clientIndex = this.clients.findIndex(client => client.getId() === id)
+
+    if (clientIndex === -1) {
+      throw new Error('Client not found')
+    }
+
+    const updatedClient: Client = new Client({
+      ...this.clients[clientIndex],
+      plan,
     })
 
     this.clients[clientIndex] = updatedClient

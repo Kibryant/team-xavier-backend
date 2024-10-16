@@ -4,6 +4,7 @@ import {
   type UpdateClientDto,
   type ClientPersistance,
   Client,
+  type Plan,
 } from '../../core/domain/client'
 import type { ClientRepository } from '../../core/repository/client-repository'
 
@@ -44,15 +45,76 @@ export class ClientRepositoryPrisma implements ClientRepository {
     id: string,
     client: UpdateClientDto
   ): Promise<ClientPersistance> {
-    throw new Error('Method not implemented.')
+    const clientUpdated = await this.prisma.client.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: client.name,
+        email: client.email,
+      },
+    })
+
+    return {
+      id: clientUpdated.id,
+      name: clientUpdated.name,
+      email: clientUpdated.email,
+      password: clientUpdated.password,
+      plan: clientUpdated.plan,
+      createdAt: clientUpdated.createdAt,
+      updatedAt: clientUpdated.updatedAt,
+    }
+  }
+
+  async changeClientPlan(id: string, plan: Plan): Promise<ClientPersistance> {
+    const clientUpdated = await this.prisma.client.update({
+      where: {
+        id: id,
+      },
+      data: {
+        plan: plan,
+      },
+    })
+
+    return {
+      id: clientUpdated.id,
+      name: clientUpdated.name,
+      email: clientUpdated.email,
+      password: clientUpdated.password,
+      plan: clientUpdated.plan,
+      createdAt: clientUpdated.createdAt,
+      updatedAt: clientUpdated.updatedAt,
+    }
   }
 
   async deleteClient(clientId: string): Promise<void> {
-    throw new Error('Method not implemented.')
+    await this.prisma.client.delete({
+      where: {
+        id: clientId,
+      },
+    })
   }
 
-  async getClientById(clientId: string): Promise<ClientPersistance> {
-    throw new Error('Method not implemented.')
+  async getClientById(clientId: string): Promise<ClientPersistance | null> {
+    const client = await this.prisma.client.findUnique({
+      where: {
+        id: clientId,
+      },
+    })
+
+    if (!client) {
+      return null
+    }
+
+    return {
+      id: client.id,
+      name: client.name,
+      email: client.email,
+      password: client.password,
+      plan: client.plan,
+      createdAt: client.createdAt,
+      updatedAt: client.updatedAt,
+    }
   }
 
   async getClientByEmail(email: string): Promise<ClientPersistance | null> {

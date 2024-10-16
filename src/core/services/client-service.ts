@@ -3,6 +3,7 @@ import type {
   Client,
   ClientPersistance,
   UpdateClientDto,
+  Plan,
 } from '../domain/client'
 import type { ClientRepository } from '../repository/client-repository'
 import { Result } from '../shared/result'
@@ -51,6 +52,24 @@ export class ClientService {
     const updatedClient = await this.clientRepository.updateClient(
       clientId,
       client
+    )
+
+    return Result.ok(200, updatedClient)
+  }
+
+  async changeClientPlan(
+    clientId: string,
+    plan: Plan
+  ): Promise<Result<ClientPersistance>> {
+    const clientExists = await this.clientRepository.getClientById(clientId)
+
+    if (!clientExists) {
+      return Result.fail('Client not found', 404)
+    }
+
+    const updatedClient = await this.clientRepository.changeClientPlan(
+      clientId,
+      plan
     )
 
     return Result.ok(200, updatedClient)
