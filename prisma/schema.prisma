@@ -21,12 +21,13 @@ model Client {
   name      String
   email     String   @unique
   password  String
-  plan      Plan
+  plan      Plan     @default(FREE)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 enum Plan {
+  FREE
   BASIC
   PRO
 }

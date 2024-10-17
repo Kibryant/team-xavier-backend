@@ -1,10 +1,9 @@
 import type { PrismaClient } from '@prisma/client'
-import {
-  type CreateClientDto,
-  type UpdateClientDto,
-  type ClientPersistance,
-  Client,
-  type Plan,
+import type {
+  CreateClientDto,
+  UpdateClientDto,
+  ClientPersistance,
+  Plan,
 } from '../../core/domain/client'
 import type { ClientRepository } from '../../core/repository/client-repository'
 

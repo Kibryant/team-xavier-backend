@@ -51,4 +51,5 @@ export type Plan = (typeof Plan)[keyof typeof Plan]
 const Plan = {
   BASIC: 'BASIC',
   PRO: 'PRO',
+  FREE: 'FREE',
 } as const

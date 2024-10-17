@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const envSchema = z.object({
   PORT: z.coerce.number().default(3000),
   JWT_SIGNING_KEY: z.string(),
+  ACCESS_CODE: z.string(),
 })
 
 export type Env = z.infer<typeof envSchema>
