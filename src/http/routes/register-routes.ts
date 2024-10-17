@@ -6,6 +6,7 @@ import { updateClient } from '../handlers/update-client'
 import { changeClientPlan } from '../handlers/change-client-plan'
 import { clientSignIn } from '../handlers/client-sign-in'
 import { getClientData } from '../handlers/get-client-data'
+import { clientSignUp } from '../handlers/client-sign-up'
 
 export async function registerRoutes(app: FastifyInstance) {
   app.register(getClients, { prefix: '/owner' })
@@ -15,4 +16,5 @@ export async function registerRoutes(app: FastifyInstance) {
   app.register(changeClientPlan)
   app.register(clientSignIn)
   app.register(getClientData)
+  app.register(clientSignUp)
 }

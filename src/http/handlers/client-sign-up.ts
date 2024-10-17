@@ -6,6 +6,7 @@ import {
   responseClientSignUpErrorSchema,
   responseClientSignUpOkSchema,
 } from '../schemas/client-sign-up-schema'
+import { env } from '../../lib/env'
 
 export const clientSignUp: FastifyPluginAsyncZod = async app => {
   app.post(
@@ -16,12 +17,22 @@ export const clientSignUp: FastifyPluginAsyncZod = async app => {
         response: {
           200: responseClientSignUpOkSchema,
           400: responseClientSignUpErrorSchema,
+          409: responseClientSignUpErrorSchema,
           500: responseClientSignUpErrorSchema,
         },
       },
     },
     async (request, reply) => {
-      const { name, email, password } = request.body
+      const { name, email, password, accessCode } = request.body
+
+      if (accessCode !== env.ACCESS_CODE) {
+        reply.status(HTTP_STATUS_CODE.BAD_REQUEST).send({
+          error: 'Bad Request',
+          message: 'Invalid access code',
+        })
+
+        return
+      }
 
       const result = await clientService.createClient({
         name,
@@ -35,6 +46,15 @@ export const clientSignUp: FastifyPluginAsyncZod = async app => {
           reply.status(HTTP_STATUS_CODE.BAD_REQUEST).send({
             error: 'Bad Request',
             message: 'Invalid data',
+          })
+
+          return
+        }
+
+        if (result.statusCode === HTTP_STATUS_CODE.CONFLICT) {
+          reply.status(HTTP_STATUS_CODE.CONFLICT).send({
+            error: 'Conflict',
+            message: 'Client already exists',
           })
 
           return
